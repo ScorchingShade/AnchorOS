@@ -1,26 +1,34 @@
-/* first we need to set the entry point of our bootloader main function */
-
+/* entry point of our kernel */
 ENTRY(_start)
 
 SECTIONS
 {
-	/*We need minimum 1MB of Size*/
-	.text BLOCK(4K)	: ALIGN(4K)
+	/* we need 1MB of space atleast */
+	. = 1M;
+
+  	/* text section */
+	.text BLOCK(4K) : ALIGN(4K)
+	{
+		*(.multiboot)
+		*(.text)
+	}
+
+	/* read only data section */
+	.rodata BLOCK(4K) : ALIGN(4K)
 	{
 		*(.rodata)
 	}
 
 	/* data section */
-
-	.data BLOCK(4K)	: ALIGN(4K)
+	.data BLOCK(4K) : ALIGN(4K)
 	{
 		*(.data)
 	}
 
 	/* bss section */
-	.bss BLOCK(4K)	: ALIGN(4K)
+	.bss BLOCK(4K) : ALIGN(4K)
 	{
-		*(.COMMON)
+		*(COMMON)
 		*(.bss)
 	}
 
